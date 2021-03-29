@@ -6,6 +6,7 @@ use App\Entity\Projet;
 use App\Form\ProjetType;
 use App\Repository\FreelancerRepository;
 use App\Repository\ProjetRepository;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -171,6 +172,40 @@ class ProjetController extends AbstractController
 
 
         return $this->redirectToRoute('projet_index');
+
+    }
+
+    /**
+     * @Route("/back/stat", name="stat")
+     */
+    public function stat(){
+        $em = $this->getDoctrine()->getManager();
+        $conn = $em->getConnection();
+
+        $sqlAdmin2 = 'SELECT job_salary , COUNT(*) AS toBeUsed FROM projet  GROUP BY job_salary';
+        $stmtAdmin2 = $conn->prepare($sqlAdmin2);
+
+
+        $stmtAdmin2->execute();
+        $arrayAdmin2 = $stmtAdmin2->fetchAll();
+
+        $data2 = array(['salaire','gestion salaires']);
+        foreach ($arrayAdmin2 as $item){
+            array_push($data2,[$item['job_salary'],intval($item['toBeUsed'])]);
+        }
+
+        $pieChart = new PieChart();
+        $pieChart->getData()->setArrayToDataTable($data2);
+        $pieChart->getOptions()->setTitle('Pourcentages des reclamations pour chaque Object');
+        $pieChart->getOptions()->setWidth(600);
+        $pieChart->getOptions()->setHeight(400);
+
+        return $this->render('projet/satatrec.html.twig', array(
+
+            'arrayAdmin2' => $arrayAdmin2,
+            'piechart'=>$pieChart ,
+
+        ));
 
     }
 }
