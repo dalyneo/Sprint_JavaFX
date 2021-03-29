@@ -10,7 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Twilio\Rest\Client as Client;
+use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * @Route("/projet")
  */
@@ -47,6 +48,53 @@ class ProjetController extends AbstractController
         ]);
     }
     /**
+     * @Route("/makeoffre", name="makeoffre", methods={"GET"})
+     */
+
+    public function makeoffre(Request $request,ProjetRepository $repository,\Swift_Mailer $mailer){
+        $projet=$repository->find($request->query->get("id"));
+        $message = (new \Swift_Message('Hello Email'))
+            ->setFrom('ayoumahouesprit@gmail.com')
+            ->setTo($projet->getUser()->getUsername())
+            ->setBody(
+               "Bonjour l'utilisateur ".$this->getUser()->getUsername()." vous contactez a propos votre offre : ".$projet->getNomProjet()
+            );
+        $mailer->send($message);
+        $sid = 'ACa4b6cca03cde40d5cb4ab9e566958e26';
+        $token = '65779274df40f74c45a7a2a745c18020';
+      //  $client = new Client($sid, $token);
+
+     //   $client->messages->create(
+      //      '+21655215711',
+  //          [
+         //       'from' => '+18452187055',
+         //       'body' =>               'Bonjour lutilisateur '.$this->getUser()->getUsername().'vous contactez a propos votre offre : '.$projet->getNomProjet()
+
+        //    ]
+      //  );
+        $response = new Response("offre bien ajouter");
+        return $response;
+
+    }
+    /**
+     * @Route("/search", name="search", methods={"GET"})
+     */
+
+    public function search(Request $request,ProjetRepository $repository,\Swift_Mailer $mailer){
+
+        $result = $repository->createQueryBuilder('o')
+            ->where('o.nomProjet  LIKE :product')
+            ->setParameter('product', '%'.$request->query->get("id").'%')
+            ->getQuery()
+            ->getArrayResult();
+        return new JsonResponse([
+            'projects' => $result
+            ]
+
+        );
+
+    }
+    /**
      * @Route("/projetP", name="projetP", methods={"GET"})
      */
     public function Projet(FreelancerRepository $repository){
@@ -64,6 +112,7 @@ class ProjetController extends AbstractController
         $projet = new Projet();
         $form = $this->createForm(ProjetType::class, $projet);
         $form->handleRequest($request);
+        $projet->setUser($this->getUser());
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();

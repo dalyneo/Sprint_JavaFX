@@ -49,6 +49,12 @@ class Projet
      */
     private $logo;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="projets")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -124,6 +130,18 @@ class Projet
     public function setLogo(string $logo): self
     {
         $this->logo = $logo;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
