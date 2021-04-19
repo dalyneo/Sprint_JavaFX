@@ -1,0 +1,118 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 22 mars 2021, 18:53:29
+    Author     : 21625
+*/
+
+
+.table-view {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-cell { 
+    -fx-border-color : #FFEFD5;
+    -fx-background-color : #FFEFD5 ;
+}
+
+
+
+
+
+
+
+#table_template .column-header {
+    -fx-background-color: #FFEFD5;
+     -fx-text-fill: white;
+}
+
+
+#menu{
+    
+    -fx-background-color : transparent ;
+    -fx-text-fill : black ;
+    -fx-font-weight : bold ;
+    -fx-font-family: "Times New Roman", Times, serif;
+     -fx-font-size : 25 ;
+ 
+    
+    
+}
+
+
+#menu:hover {
+    
+    -fx-background-color : #FFEFD5 ;
+    -fx-text-fill : white ;
+    -fx-font-weight : bold ;
+    -fx-font-family: "Times New Roman", Times, serif;
+     -fx-font-size : 25 ;
+    
+    
+}
+
+#template_button{
+     -fx-background-color : white ;
+    -fx-opacity : 90% ;
+    -fx-text-fill : orange ;
+    -fx-font-weight : bold ;
+    
+}
+
+#template_button:hover{
+     -fx-background-color : white ;
+    -fx-opacity : 100% ;
+    -fx-text-fill : orange ;
+    -fx-font-weight : bold ;
+    
+}
+
+
+#template_edit{
+  -fx-background-color : #FFEFD5 ;
+ -fx-color : #fcbe65 ;
+-fx-text : red ;
+ 
+    
+}
+
+#template_textfield{
+    -fx-background-color : orange ;
+    -fx-prompt-text-fill : white ;
+    -fx-border-color : white ;
+    -fx-text-fill : white ;
+}
+#template_label{
+    -fx-text-fill : white ;
+     -fx-font-weight : bold ;
+    -fx-font-family: "Times New Roman", Times, serif;
+     -fx-font-size : 50 ;
+    
+}
+#login{
+    -fx-background-color : transparent ;
+    
+    
+}
+
+#login:hover{
+    -fx-text-fill : white ;
+}
+
+#background{
+     -fx-background-image: url("blanc-orange.png");
+     -fx-background-repeat : no-repeat ;
+     -fx-background-color : #FFEFD5 ;
+     
+    
+}
+
+#musks{
+    -fx-text-fill :orange ;
+    -fx-font-family: "Times New Roman", Times, serif;
+    -fx-font-size : 45 ;
+    -fx-font-weight: bold;
+}
