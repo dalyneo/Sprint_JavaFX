@@ -8,6 +8,7 @@ package p1.connexion.gui;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +19,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -27,7 +30,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
 import javax.swing.JOptionPane;
 import p1.connexion.entities.Commentaire;
+import p1.connexion.entities.Forum;
 import p1.connexion.services.CommenterCRUD;
+import p1.connexion.services.CurseFilterService;
+import p1.connexion.services.ForumCRUD;
 
 /**
  * FXML Controller class
@@ -53,6 +59,10 @@ public class CommenterFXMLController implements Initializable {
     private Button btnmodifier;
     @FXML
     private Button retourbtn;
+    @FXML
+    private TextField raiting;
+    @FXML
+    private TableColumn<Commentaire, String> ratingcol;
     
     
 
@@ -74,6 +84,8 @@ public class CommenterFXMLController implements Initializable {
 
          
             col_des_com.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
+            ratingcol.setCellValueFactory(new PropertyValueFactory<>("rating"));
+
 
             tablecom.setItems(ls);
 
@@ -103,7 +115,9 @@ public void showinformation(String b) throws SQLException {
     private void ajoutercommentaire(ActionEvent event) throws SQLException {
       
         // commentaire f = new commentaire(Integer.parseInt(txfidcom.getText()),Integer.parseInt(txfidf.getText()),Integer.parseInt(txfidu.getText()), txfdes.getText());
-        Commentaire f = new Commentaire( txfdes.getText());
+            // Commentaire r = new Commentaire(CurseFilterService.cleanText(txfdes.getText()));
+        Commentaire f = new Commentaire( CurseFilterService.cleanText(txfdes.getText()));
+        f.setRating(Integer.parseInt(raiting.getText()));
         f.setForum_id(forumId);
      
         CommenterCRUD s = new CommenterCRUD();
@@ -121,10 +135,13 @@ public void showinformation(String b) throws SQLException {
     }
     @FXML
     private void modifiercommentaire(ActionEvent event) throws SQLException {
+        
         Commentaire c = (Commentaire) tablecom.getSelectionModel().getSelectedItem();
 
         CommenterCRUD fo = new CommenterCRUD();
-       c.setCommentaire(txfdes.getText());
+       c.setCommentaire(CurseFilterService.cleanText(txfdes.getText()));
+       c.setRating(Integer.parseInt(raiting.getText()));
+
 
         fo.Modifier(c);
 
@@ -139,12 +156,17 @@ public void showinformation(String b) throws SQLException {
         if (event.getClickCount() == 2) {
             Commentaire i = tablecom.getSelectionModel().getSelectedItem();
             CommenterCRUD si = new CommenterCRUD();
-            si.Supprimer(i);
-            JOptionPane.showMessageDialog(null, "Suppression avec sucess");
-          
-
             
-            try {
+            
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.setTitle("Confirmation Dialog");
+                            alert.setHeaderText("Supprimer " + i.getCommentaire()+ " ?");
+
+                            Optional<ButtonType> result = alert.showAndWait();
+                            if (result.get() == ButtonType.OK){
+                                si.Supprimer(i);
+                                JOptionPane.showMessageDialog(null, "Suppression avec sucess");
+                                try {
                 ObservableList<Commentaire> ls = si.read3(labe1.getText());
 
                 
@@ -153,11 +175,21 @@ public void showinformation(String b) throws SQLException {
             } catch (SQLException ex) {
                 Logger.getLogger(CommenterFXMLController.class.getName()).log(Level.SEVERE, null, ex);
             }
+                                
+                            }
+            
+            
+            
+                    
+
+    
+            
         } else if (event.getClickCount() == 1) {
             Commentaire c = (Commentaire) tablecom.getSelectionModel().getSelectedItem();
             if (c != null) {
 
                 txfdes.setText(c.getCommentaire());
+                raiting.setText(c.getRating() + "");
 
             }
         }
@@ -170,6 +202,32 @@ public void showinformation(String b) throws SQLException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML.fxml"));
 
         Parent root = loader.load();
+        FXMLController fXMLController = loader.getController();
+            fXMLController.setLs(new ForumCRUD().read());
+            fXMLController.getLs().forEach((forum) -> {
+            int count = new CommenterCRUD().countCommentersByForumId(forum.getId());
+            int sum = new CommenterCRUD().ratingSum(forum.getId());
+            int moy = 0;
+            if (count != 0) {
+                moy = sum / count;
+            }
+            
+            switch (moy) {
+                case 0: case 1:
+                    forum.setRatingImage("StarVide.png");
+                break;
+                
+                case 2: case 3: case 4:
+                    forum.setRatingImage("demiStar.png");
+                break;
+                
+                default:
+                    forum.setRatingImage("Star.png");
+                break;
+
+                                    }
+        });
+        fXMLController.getTableforum().setItems(fXMLController.getLs());
         retourbtn.getScene().setRoot(root);
     }
 

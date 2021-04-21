@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
+import p1.connexion.services.CommenterCRUD;
 import p1.connexion.services.ForumCRUD;
 
 /**
@@ -37,7 +38,7 @@ public class StatController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-         ForumCRUD s = new ForumCRUD();
+         ForumCRUD s = new ForumCRUD();     
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
                 new PieChart.Data("soft skills: " + s.calcul_soft(), s.calcul_soft()),
                 new PieChart.Data("finance: " + s.calcul_finance(), s.calcul_finance()),
@@ -49,9 +50,35 @@ public class StatController implements Initializable {
     @FXML
     public void retour(ActionEvent event) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML.fxml"));
+       FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML.fxml"));
 
         Parent root = loader.load();
+        FXMLController fXMLController = loader.getController();
+            fXMLController.setLs(new ForumCRUD().read());
+            fXMLController.getLs().forEach((forum) -> {
+            int count = new CommenterCRUD().countCommentersByForumId(forum.getId());
+            int sum = new CommenterCRUD().ratingSum(forum.getId());
+            int moy = 0;
+            if (count != 0) {
+                moy = sum / count;
+            }
+            
+            switch (moy) {
+                case 0: case 1:
+                    forum.setRatingImage("StarVide.png");
+                break;
+                
+                case 2: case 3: case 4:
+                    forum.setRatingImage("demiStar.png");
+                break;
+                
+                default:
+                    forum.setRatingImage("Star.png");
+                break;
+
+                                    }
+        });
+        fXMLController.getTableforum().setItems(fXMLController.getLs());
         btnretour.getScene().setRoot(root);
     }
     

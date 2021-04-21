@@ -80,8 +80,8 @@ and open the template in the editor.
 }
 
 #template_textfield{
-    -fx-background-color : orange ;
-    -fx-prompt-text-fill : white ;
+    -fx-background-color : white ;
+    -fx-prompt-text-fill : black ;
     -fx-border-color : white ;
     -fx-text-fill : white ;
 }

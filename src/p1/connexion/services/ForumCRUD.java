@@ -96,7 +96,6 @@ public class ForumCRUD {
        public void Modifier(Forum t) {
         String requete = "UPDATE forum set sujet=?,probleme=?,theme=? WHERE id=?";
         try {
-            System.out.println("a777");
             PreparedStatement pst
                     = MyConnection.getInstance().getCnx().prepareStatement(requete);
             pst.setInt(4, t.getId());
@@ -153,7 +152,7 @@ public class ForumCRUD {
                     = MyConnection.getInstance().getCnx().prepareStatement(requete);
             ResultSet rs = pst.executeQuery(requete);
             while (rs.next()) {
-                if ("soft skills".equals(rs.getString(5))) {
+                if ("soft skills".equals(rs.getString("theme"))) {
                     i++;
                 };
 
@@ -179,7 +178,7 @@ public class ForumCRUD {
             ResultSet rs = pst.executeQuery(requete);
             while (rs.next()) {
 
-                if ("finance".equals(rs.getString(5))) {
+                if ("finance".equals(rs.getString("theme"))) {
                     j++;
                 };
 
@@ -204,7 +203,7 @@ public class ForumCRUD {
             ResultSet rs = pst.executeQuery(requete);
             while (rs.next()) {
 
-                if ("manangement".equals(rs.getString(5))) {
+                if ("manangement".equals(rs.getString("theme"))) {
                     k++;
                 };
             }

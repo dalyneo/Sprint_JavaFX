@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import static java.util.Collections.list;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,19 +28,23 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
 import javax.swing.JOptionPane;
 import p1.connexion.entities.Forum;
+import p1.connexion.services.CurseFilterService;
 import p1.connexion.services.ForumCRUD;
 import p1.connexion.tools.MyConnection;
 
@@ -85,6 +90,12 @@ public class FXMLController implements Initializable {
     ObservableList<Forum> list = FXCollections.observableArrayList();
     @FXML
     private Button btnmodifier;
+    @FXML
+    private Button forum_admin;
+    @FXML
+    private TableColumn<Forum, ImageView> ratingForum;
+    
+    private ObservableList<Forum> ls;
    
     
 
@@ -107,13 +118,15 @@ public class FXMLController implements Initializable {
          
          
         
-         ObservableList<Forum> ls = s.read();
+         // ls = s.read();
 
             
             col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
             col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
             col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
             col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+            ratingForum.setCellValueFactory(new PropertyValueFactory<>("ratingImg"));
+
             views.setCellValueFactory(new PropertyValueFactory<>("nviews"));
             Callback<TableColumn<Forum, String>, TableCell<Forum, String>> cellFactory = (param) -> {
                 TableCell<Forum, String> cell = new TableCell<Forum, String>() {
@@ -155,10 +168,19 @@ public class FXMLController implements Initializable {
             
             Editcol.setCellFactory(cellFactory);
             
-            tableforum.setItems(ls);
+            //tableforum.setItems(ls);
            
             
             
+    }
+    
+        @FXML
+    public void forum_admin(ActionEvent event) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("forumBackFXML.fxml"));
+
+        Parent root = loader.load();
+        forum_admin.getScene().setRoot(root);
     }
     
     
@@ -166,13 +188,14 @@ public class FXMLController implements Initializable {
     private void ajouterforum(ActionEvent event) {
         
        
-        Forum f = new Forum( txftitre.getText(), txfcontenu.getText(), txftheme.getValue());
+        Forum f = new Forum(CurseFilterService.cleanText(txftitre.getText()), CurseFilterService.cleanText(txfcontenu.getText()), txftheme.getValue());
         ForumCRUD s = new ForumCRUD();
+
         s.addPerson2(f);
         JOptionPane.showMessageDialog(null, "Ajouter avec sucess");
         
         
-         ObservableList<Forum> ls = s.read();
+         ls = s.read();
         col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
             col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
             col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
@@ -184,16 +207,33 @@ public class FXMLController implements Initializable {
     @FXML
     private void displaySelected(javafx.scene.input.MouseEvent event) {
         if (event.getClickCount() == 2) {
-            Forum i = tableforum.getSelectionModel().getSelectedItem();
+           
+        Forum i = tableforum.getSelectionModel().getSelectedItem();
             ForumCRUD si = new ForumCRUD();
-            si.Supprimer(i);
-            JOptionPane.showMessageDialog(null, "Suppression avec sucess");
-      
-            ObservableList<Forum> ls = si.read();
+            
+            
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.setTitle("Confirmation Dialog");
+                            alert.setHeaderText("Supprimer " + i.getSujet()+ " ?");
+
+                            Optional<ButtonType> result = alert.showAndWait();
+                            if (result.get() == ButtonType.OK){
+                                si.Supprimer(i);
+                                JOptionPane.showMessageDialog(null, "Suppression avec sucess");
+                                ls = si.read();
             col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
             col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
             col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
             tableforum.setItems(ls);
+                            }
+            
+            
+            
+            
+            
+            
+      
+            
         } else if (event.getClickCount() == 1) {
             Forum c = (Forum) tableforum.getSelectionModel().getSelectedItem();
             if (c != null) {
@@ -216,7 +256,7 @@ public class FXMLController implements Initializable {
         System.out.println(txftitre.getText());
         fo.Modifier(h);
 
-        ObservableList<Forum> ls = fo.read();
+        ls = fo.read();
         // col_idF.setCellValueFactory(new PropertyValueFactory<>("idF"));
         col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
         col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
@@ -229,15 +269,15 @@ public class FXMLController implements Initializable {
       private void filtrer(ActionEvent event) throws SQLException {
         ForumCRUD fo = new ForumCRUD();
         if (filtre.getValue() != "") {
-            ObservableList<Forum> ls = fo.filtrer((String) filtre.getValue());
-            col_titre.setCellValueFactory(new PropertyValueFactory<>("titre"));
-            col_contenu.setCellValueFactory(new PropertyValueFactory<>("contenu"));
+            ls = fo.filtrer((String) filtre.getValue());
+            col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
+            col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
             col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
             tableforum.setItems(ls);
         } else {
-            ObservableList<Forum> ls = fo.read();
-            col_titre.setCellValueFactory(new PropertyValueFactory<>("titre"));
-            col_contenu.setCellValueFactory(new PropertyValueFactory<>("contenu"));
+            ls = fo.read();
+            col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
+            col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
             col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
             tableforum.setItems(ls);
 
@@ -389,6 +429,16 @@ public class FXMLController implements Initializable {
                
         
     }
+
+    public ObservableList<Forum> getLs() {
+        return ls;
+    }
+
+    public void setLs(ObservableList<Forum> ls) {
+        this.ls = ls;
+    }
+     
+     
      
     
 

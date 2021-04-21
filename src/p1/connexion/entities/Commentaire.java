@@ -77,6 +77,8 @@ public class Commentaire {
     public void setCommentaire(String commentaire) {
         this.commentaire = commentaire;
     }
+    
+    
 
     public Commentaire(int forum_id, String commentaire) {
         this.forum_id = forum_id;

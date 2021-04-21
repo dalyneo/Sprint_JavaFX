@@ -5,9 +5,12 @@
  */
 package p1.connexion.entities;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Set;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  *
@@ -19,10 +22,13 @@ public class Forum implements Comparator<Forum> {
     private String probleme;
     private LocalDateTime date;
     private String theme;
-    private String views = "1,2,3,";
+    private String views;
     private int nviews;
+    private ImageView ratingImg;
 
     public int getNviews() {
+        if(views == null)
+            return 0;
         return views.split(",").length;
     }
 
@@ -30,6 +36,7 @@ public class Forum implements Comparator<Forum> {
 
     public Forum() {
         date=LocalDateTime.now();
+        ratingImg = new ImageView();
     }
 
     public Forum(int id, String sujet, String probleme, String theme) {
@@ -37,6 +44,7 @@ public class Forum implements Comparator<Forum> {
         this.sujet = sujet;
         this.probleme = probleme;
      date=LocalDateTime.now();
+     ratingImg = new ImageView();
      this.theme = theme;
     }
 
@@ -45,6 +53,7 @@ public class Forum implements Comparator<Forum> {
         this.probleme = probleme;
         this.theme = theme;
         date=LocalDateTime.now();
+        ratingImg = new ImageView();
     }
 
     public String getViews() {
@@ -96,6 +105,16 @@ public class Forum implements Comparator<Forum> {
         this.theme = theme;
     }
 
+    public ImageView getRatingImg() {
+        return ratingImg;
+    }
+
+    public void setRatingImg(ImageView ratingImg) {
+        this.ratingImg = ratingImg;
+    }
+    
+    
+
     @Override
     public String toString() {
         return "Forum{" + "id=" + id + ", sujet=" + sujet + ", probleme=" + probleme + ", date=" + date + ", theme=" + theme + '}';
@@ -105,6 +124,18 @@ public class Forum implements Comparator<Forum> {
     public int compare(Forum o1, Forum o2) {
         return o1.getTheme().compareTo(o2.getTheme());
     
+    }
+    
+     public void setRatingImage(String imgUrl) {
+        File file = new File("src/" + imgUrl);
+        try {
+            Image img = new Image(file.toURI().toString());
+            ratingImg.setImage(img);
+            ratingImg.setFitWidth(30);
+            ratingImg.setFitHeight(30);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
    

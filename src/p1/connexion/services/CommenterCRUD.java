@@ -23,14 +23,15 @@ import p1.connexion.tools.MyConnection;
 public class CommenterCRUD {
     
 public void Ajouter(Commentaire t) {
-        String requete = "INSERT INTO commenter(commentaire,forum_id,ref)"
-                + "VALUES (?,?,?) ";
+        String requete = "INSERT INTO commenter(commentaire,forum_id,ref,rating)"
+                + "VALUES (?,?,?,?) ";
         try {
             PreparedStatement pst
                     = MyConnection.getInstance().getCnx().prepareStatement(requete);
             pst.setString(1, t.getCommentaire());
             pst.setInt(2, t.getForum_id());
             pst.setInt(3, t.getRef());
+            pst.setInt(4, t.getRating());
            
             pst.executeUpdate();
             System.out.println("commentaire ajouté !");
@@ -56,6 +57,7 @@ public ObservableList<Commentaire> read() throws SQLException {
                
 
                 Commentaire a = new Commentaire(commentaire, forum_id, ref);
+                a.setRating(rs.getInt("rating"));
 
                 l.add(a);
             }
@@ -81,6 +83,7 @@ public ObservableList<Commentaire> read3(String x) throws SQLException {
                 
 
                 Commentaire a = new Commentaire(commentaire, forum_id, ref);
+                a.setRating(rs.getInt("rating"));
 
                 l.add(a);
             }
@@ -105,14 +108,16 @@ public void Supprimer(Commentaire c) {
     }
 
 public void Modifier(Commentaire t) {
-        String requete = "UPDATE commenter SET forum_id=? ,commentaire=? WHERE ref=?";
+        String requete = "UPDATE commenter SET forum_id=? ,commentaire=?, rating = ? WHERE ref=?";
         try {
             PreparedStatement pst
                     = MyConnection.getInstance().getCnx().prepareStatement(requete);
-            pst.setInt(3, t.getRef());
+            pst.setInt(4, t.getRef());
             pst.setInt(1, t.getForum_id());
+  
            
             pst.setString(2, t.getCommentaire());
+            pst.setInt(3, t.getRating());
             pst.executeUpdate();
             System.out.println("commentaire modfié !");
         } catch (SQLException ex) {
@@ -120,24 +125,31 @@ public void Modifier(Commentaire t) {
         }
     }
 
- public int count( int idS) throws SQLException
+ public int countCommentersByForumId( int id)
     {
+    try {
         int i=0 ;
         Statement st = MyConnection.getInstance().getCnx().createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM commenter where forum_id ='"+idS+"';");
+        ResultSet rs = st.executeQuery("SELECT * FROM commenter where forum_id ='"+id+"';");
         while (rs.next()) {
             rs.getInt("ref");
             rs.getString("commentaire");
             rs.getInt("rating");
             i++;
         }
-       return i;
+        return i;
+    } catch (SQLException ex) {
+        return 0;
     }
-  public int sum( int idS) throws SQLException
+    }
+ 
+ 
+  public int ratingSum( int id)
     {
+    try {
         int sum=0 ;
         Statement st = MyConnection.getInstance().getCnx().createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM commenter where forum_id ='"+idS+"';");
+        ResultSet rs = st.executeQuery("SELECT * FROM commenter where forum_id ='"+id+"';");
         while (rs.next()) {
             rs.getInt("ref");
             rs.getString("commentaire");
@@ -146,6 +158,9 @@ public void Modifier(Commentaire t) {
 
         }
         return sum;
+    } catch (SQLException ex) {
+        return 0;
+    }
     } 
 
 

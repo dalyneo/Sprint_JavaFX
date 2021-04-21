@@ -26,7 +26,7 @@
             <Button id="menu" layoutX="14.0" layoutY="166.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Authentification" />
             <Button id="menu" layoutX="14.0" layoutY="236.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Freelancer" />
             <Button id="menu" layoutX="14.0" layoutY="304.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Offre" />
-            <Button id="menu" layoutX="14.0" layoutY="371.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Forum" />
+            <Button id="menu" fx:id="forum_admin" layoutX="14.0" layoutY="371.0" mnemonicParsing="false" onAction="#forum_admin" prefHeight="59.0" prefWidth="251.0" text="Forum Admin" />
             <Button id="menu" layoutX="14.0" layoutY="439.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Certificat" />
             <Button id="menu" layoutX="14.0" layoutY="507.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Evenement" />
          </children>
@@ -38,7 +38,8 @@
             <TableColumn fx:id="col_contenu" prefWidth="108.0" text="Probleme" />
             <TableColumn fx:id="col_date" prefWidth="100.0" text="Date" />
             <TableColumn fx:id="views" prefWidth="100.0" text="views" />
-            <TableColumn fx:id="Editcol" prefWidth="268.0" />
+            <TableColumn fx:id="Editcol" prefWidth="62.0" />
+            <TableColumn fx:id="ratingForum" prefWidth="110.0" text="Rating" />
         </columns>
       </TableView>
       <TextField id="template_textfield" fx:id="txftitre" layoutX="325.0" layoutY="356.0" promptText="Tapez votre sujet" />
