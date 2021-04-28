@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="801.0" prefWidth="1478.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.devit.gui.Back">
+    <TabPane layoutX="304.0" layoutY="243.0" prefHeight="522.0" prefWidth="1109.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab text="FREELANCER">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+
+                     <Button fx:id="delete" layoutX="654.0" layoutY="418.0" mnemonicParsing="false" onAction="#deletefree" text="Delete" />
+                        </children>
+                    </AnchorPane>
+                </content>
+            </Tab>
+        </tabs>
+    </TabPane>
+
+    <AnchorPane layoutX="-8.0" prefHeight="800.0" prefWidth="283.0" style="-fx-background-color: #D3D3D3;">
+        <children>
+            <AnchorPane prefHeight="153.0" prefWidth="283.0" style="-fx-background-color: #A9A9A9;">
+                <children>
+                    <Label layoutX="33.0" layoutY="37.0" prefHeight="79.0" prefWidth="221.0" text="ESPRIT WORK" textFill="#126f80">
+                        <font>
+                            <Font name="System Italic" size="31.0" />
+                        </font>
+                    </Label>
+                </children>
+            </AnchorPane>
+            <Label layoutX="14.0" layoutY="668.0" prefHeight="133.0" prefWidth="267.0" styleClass="test" stylesheets="@../stylesheets/style.css" />
+        </children>
+    </AnchorPane>
+    <Button id="menu" layoutY="198.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Authentification" />
+    <Button id="menu" layoutY="278.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Freelancer" />
+    <Button id="menu" layoutY="356.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Offre" />
+    <Button id="menu" layoutY="435.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Forum" />
+    <Button id="menu" layoutY="515.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Certificat" />
+    <Button id="menu" layoutY="599.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Evenement" />
+    <Label layoutX="276.0" layoutY="27.0" prefHeight="201.0" prefWidth="920.0" styleClass="test1" stylesheets="@../stylesheets/style.css" />
+    <TableView fx:id="tabfreelancer" layoutX="621.0" layoutY="328.0"  prefHeight="332.0" prefWidth="826.0">
+        <columns>
+            <TableColumn fx:id="tab_id" prefWidth="75.0" text="Id" />
+            <TableColumn fx:id="tab_email" prefWidth="75.0" text="Email" />
+            <TableColumn fx:id="tab_title" prefWidth="75.0" text="Title" />
+            <TableColumn fx:id="tab_skills" prefWidth="75.0" text="Skills" />
+            <TableColumn fx:id="tab_country" prefWidth="75.0" text="Country" />
+            <TableColumn fx:id="tab_name" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="tab_password" prefWidth="75.0" text="Password" />
+            <TableColumn fx:id="tab_prix" prefWidth="75.0" text="Prix" />
+            <TableColumn fx:id="tab_education" prefWidth="75.0" text="Education" />
+            <TableColumn fx:id="tab_experience" prefWidth="75.0" text="Experience" />
+            <TableColumn fx:id="tab_contact" prefWidth="75.0" />
+        </columns>
+    </TableView>
+    <TextField fx:id="tfchercher" layoutX="858.0" layoutY="166.0" />
+    <Text layoutX="296.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Freelancer Details" wrappingWidth="325.13671875">
+        <font>
+            <Font name="Bauhaus 93" size="38.0" />
+        </font>
+    </Text>
+    <Label layoutX="275.0" layoutY="27.0" prefHeight="201.0" prefWidth="1140.0" styleClass="test1" stylesheets="@../stylesheets/style.css" />
+
+
+
+
+</AnchorPane>
