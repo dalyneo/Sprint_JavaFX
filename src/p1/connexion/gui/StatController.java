@@ -31,6 +31,8 @@ public class StatController implements Initializable {
     private PieChart piechart;
     @FXML
     private Button btnretour;
+    @FXML
+    private Button forum_admin;
 
     /**
      * Initializes the controller class.
@@ -38,7 +40,8 @@ public class StatController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-         ForumCRUD s = new ForumCRUD();     
+         ForumCRUD s = new ForumCRUD(); 
+         new animatefx.animation.ZoomInUp(btnretour).play();
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
                 new PieChart.Data("soft skills: " + s.calcul_soft(), s.calcul_soft()),
                 new PieChart.Data("finance: " + s.calcul_finance(), s.calcul_finance()),
@@ -48,12 +51,12 @@ public class StatController implements Initializable {
     }
 
     @FXML
-    public void retour(ActionEvent event) throws IOException {
+     public void retourBack(ActionEvent event) throws IOException {
 
-       FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("forumBackFXML.fxml"));
 
         Parent root = loader.load();
-        FXMLController fXMLController = loader.getController();
+        ForumBackFXMLController fXMLController = loader.getController();
             fXMLController.setLs(new ForumCRUD().read());
             fXMLController.getLs().forEach((forum) -> {
             int count = new CommenterCRUD().countCommentersByForumId(forum.getId());
@@ -81,6 +84,5 @@ public class StatController implements Initializable {
         fXMLController.getTableforum().setItems(fXMLController.getLs());
         btnretour.getScene().setRoot(root);
     }
-    
     
 }

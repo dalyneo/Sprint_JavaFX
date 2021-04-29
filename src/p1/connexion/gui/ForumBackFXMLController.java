@@ -28,10 +28,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import javax.swing.JOptionPane;
 import p1.connexion.entities.Forum;
 import p1.connexion.services.CommenterCRUD;
 import p1.connexion.services.ForumCRUD;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 /**
  * FXML Controller class
@@ -58,6 +61,11 @@ public class ForumBackFXMLController implements Initializable {
     private ComboBox<String> filtre;
     @FXML
     private Button retour_back;
+    @FXML
+    private Button stat;
+    @FXML
+    private Button forum_admin;
+      private ObservableList<Forum> ls;
 
     /**
      * Initializes the controller class.
@@ -70,6 +78,8 @@ public class ForumBackFXMLController implements Initializable {
        
     
       ForumCRUD  s = new ForumCRUD();
+        new animatefx.animation.ZoomInUp(stat).play();
+          new animatefx.animation.ZoomInUp(retour_back).play();
         
         // new animatefx.animation.ZoomInUp(stat).play();
          
@@ -99,7 +109,7 @@ public class ForumBackFXMLController implements Initializable {
                                 try {
                                     Parent root = (Parent) loader.load();
                                     editButton.getScene().setRoot(root);
-                                    CommenterFXMLController CommentaireController = loader.getController();
+                                    CommenterBackController CommentaireController = loader.getController();
                                     CommentaireController.setForumId(f.getId());
                                     CommentaireController.showinformation(Integer.toString(f.getId()));
 
@@ -190,6 +200,7 @@ public class ForumBackFXMLController implements Initializable {
       
     @FXML
           private void displaySelectedBack(javafx.scene.input.MouseEvent event) {
+               TrayNotification tray = null;
         if (event.getClickCount() == 2) {
             Forum i = tableforum_back.getSelectionModel().getSelectedItem();
             ForumCRUD si = new ForumCRUD();
@@ -201,9 +212,11 @@ public class ForumBackFXMLController implements Initializable {
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == ButtonType.OK){
                                 si.Supprimer(i);
-            JOptionPane.showMessageDialog(null, "Suppression avec sucess");
+           // JOptionPane.showMessageDialog(null, "Suppression avec sucess");
       
             ObservableList<Forum> ls = si.read();
+             tray = new TrayNotification("Forum", "Forum supprimer avec succces ", NotificationType.SUCCESS);
+        tray.showAndDismiss(Duration.seconds(6));
             col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
             col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
             col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
@@ -220,5 +233,30 @@ public class ForumBackFXMLController implements Initializable {
         }
 
     }
-    
+
+    @FXML
+    private void afficherStat2(ActionEvent event) {
+         FXMLLoader loader = new FXMLLoader(getClass().getResource("stat.fxml"));
+
+        try {
+            Parent root = loader.load();
+            stat.getScene().setRoot(root);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void forum_admin(ActionEvent event) {
+    }
+    public ObservableList<Forum> getLs() {
+        return ls;
+    }
+
+    public void setLs(ObservableList<Forum> ls) {
+        this.ls = ls;
+    }
+      public TableView<Forum> getTableforum() {
+        return tableforum_back;
+    }
 }

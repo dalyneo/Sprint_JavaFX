@@ -26,9 +26,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 import javax.swing.JOptionPane;
 import p1.connexion.entities.Commentaire;
 import p1.connexion.services.CommenterCRUD;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 /**
  * FXML Controller class
@@ -43,6 +46,7 @@ public class CommenterBackController implements Initializable {
     private TableColumn<Commentaire,String> col_des_com;
     @FXML
     private Label label;
+    private int forumId;
     @FXML
     private Label labe1;
     @FXML
@@ -57,6 +61,7 @@ public class CommenterBackController implements Initializable {
         // TODO
                  
                 CommenterCRUD c = new CommenterCRUD();
+                new animatefx.animation.ZoomInUp(retourbtnBack).play();
                      try {
 
             ObservableList<Commentaire> ls = c.read();
@@ -69,10 +74,26 @@ public class CommenterBackController implements Initializable {
         } catch (Exception ex) {
             Logger.getLogger(CommenterFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+public void showinformation(String b) throws SQLException {
+        CommenterCRUD c = new CommenterCRUD();
+
+         labe1.setText(b);
+        System.out.println(labe1.getText());
+      
+      ObservableList<Commentaire> ls = c.read3(labe1.getText());
+
+//            col_idcom.setCellValueFactory(new PropertyValueFactory<>("idCom"));
+//            col_idf.setCellValueFactory(new PropertyValueFactory<>("idF"));
+       
+        col_des_com.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
+        tablecomBack.setItems(ls);
+
     }    
 
     @FXML
     private void displaySelectedCommBack(javafx.scene.input.MouseEvent event) {
+        TrayNotification tray = null;
            if (event.getClickCount() == 2) {
             Commentaire i = tablecomBack.getSelectionModel().getSelectedItem();
             CommenterCRUD si = new CommenterCRUD();
@@ -85,10 +106,11 @@ public class CommenterBackController implements Initializable {
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == ButtonType.OK){
                                 si.Supprimer(i);
-                                JOptionPane.showMessageDialog(null, "Suppression avec sucess");
+                               // JOptionPane.showMessageDialog(null, "Suppression avec sucess");
                                 try {
                 ObservableList<Commentaire> ls = si.read3(labe1.getText());
-
+ tray = new TrayNotification("Commentaire", "Commentaire ajouter avec succces ", NotificationType.SUCCESS);
+        tray.showAndDismiss(Duration.seconds(6));
                 
                 col_des_com.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
                 tablecomBack.setItems(ls);
@@ -111,6 +133,14 @@ public class CommenterBackController implements Initializable {
 
         Parent root = loader.load();
         retourbtnBack.getScene().setRoot(root);
+    }
+    
+     public int getForumId() {
+        return forumId;
+    }
+
+    public void setForumId(int forumId) {
+        this.forumId = forumId;
     }
     
 }

@@ -10,18 +10,18 @@
 
 <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="p1.connexion.gui.CommenterFXMLController">
    <children>
-      <TableView fx:id="tablecom" layoutX="335.0" layoutY="234.0" onMouseClicked="#displaySelected2" prefHeight="305.0" prefWidth="438.0">
+      <TableView fx:id="tablecom" layoutX="621.0" layoutY="207.0" onMouseClicked="#displaySelected2" prefHeight="387.0" prefWidth="551.0">
         <columns>
-          <TableColumn fx:id="col_des_com" prefWidth="331.0" text="Commentaire" />
-            <TableColumn fx:id="ratingcol" prefWidth="105.0" text="Rating" />
+          <TableColumn fx:id="col_des_com" prefWidth="385.0" text="Commentaire" />
+            <TableColumn fx:id="ratingcol" prefWidth="185.0" text="Rating" />
         </columns>
       </TableView>
-      <TextField fx:id="txfdes" layoutX="433.0" layoutY="596.0" promptText="Tapez votre commentaires" />
-      <Button fx:id="btnajouter" layoutX="610.0" layoutY="596.0" mnemonicParsing="false" onAction="#ajoutercommentaire" text="Ajouter" />
-      <Button fx:id="btnmodifier" layoutX="687.0" layoutY="596.0" mnemonicParsing="false" onAction="#modifiercommentaire" text="Modifier" />
+      <TextField fx:id="txfdes" layoutX="369.0" layoutY="344.0" promptText="Tapez votre commentaires" />
+      <Button fx:id="btnajouter" layoutX="389.0" layoutY="441.0" mnemonicParsing="false" onAction="#ajoutercommentaire" text="Ajouter" />
+      <Button fx:id="btnmodifier" layoutX="457.0" layoutY="441.0" mnemonicParsing="false" onAction="#modifiercommentaire" text="Modifier" />
       <Label fx:id="label" layoutX="559.0" layoutY="369.0" />
       <Label fx:id="labe1" layoutX="559.0" layoutY="356.0" />
-      <Button fx:id="retourbtn" layoutX="823.0" layoutY="688.0" mnemonicParsing="false" onAction="#retour" text="Quitter" />
+      <Button fx:id="retourbtn" layoutX="1109.0" layoutY="610.0" mnemonicParsing="false" onAction="#retour" text="Quitter" />
       <AnchorPane layoutX="2.0" prefHeight="810.0" prefWidth="283.0" style="-fx-background-color: #D3D3D3;">
          <children>
             <AnchorPane prefHeight="153.0" prefWidth="283.0" style="-fx-background-color: #A9A9A9;">
@@ -43,6 +43,6 @@
          </children>
       </AnchorPane>
       <Label layoutX="285.0" prefHeight="201.0" prefWidth="963.0" styleClass="test1" stylesheets="@../../../style.css" />
-      <TextField fx:id="raiting" layoutX="433.0" layoutY="634.0" promptText="Donnez une note" />
+      <TextField fx:id="raiting" layoutX="369.0" layoutY="388.0" promptText="Donnez une note" />
    </children>
 </AnchorPane>

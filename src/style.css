@@ -9,6 +9,11 @@
     -fx-background-image: url("logo1.jpg");
     -fx-background-size: 100% 100%; 
 }
+.testdash{
+    
+    -fx-background-image: url("dash.jpg");
+    -fx-background-size: 100% 100%; 
+}
 
 .test2{
     -fx-background-color:  #f95151;

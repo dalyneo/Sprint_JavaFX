@@ -8,17 +8,21 @@ package p1.connexion.gui;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import static java.util.Collections.list;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -43,10 +47,14 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 import javax.swing.JOptionPane;
+import org.ocpsoft.prettytime.PrettyTime;
 import p1.connexion.entities.Forum;
+import p1.connexion.services.CommenterCRUD;
 import p1.connexion.services.CurseFilterService;
 import p1.connexion.services.ForumCRUD;
 import p1.connexion.tools.MyConnection;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 /**
  * FXML Controller class
@@ -66,7 +74,7 @@ public class FXMLController implements Initializable {
     @FXML
     private TableColumn<Forum, String> col_contenu;
     @FXML
-    private TableColumn<Forum, LocalDateTime> col_date;
+    private TableColumn<Forum, String> col_date;
     @FXML
     private TextField txftitre;
     @FXML
@@ -124,7 +132,14 @@ public class FXMLController implements Initializable {
             col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
             col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
             col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
-            col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+            // col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+            
+           
+            PrettyTime p = new PrettyTime();
+            col_date.setCellValueFactory(cellData -> new SimpleObjectProperty<>(p.format(Date.valueOf(cellData.getValue().getDate().toLocalDate()))));
+
+            
+            
             ratingForum.setCellValueFactory(new PropertyValueFactory<>("ratingImg"));
 
             views.setCellValueFactory(new PropertyValueFactory<>("nviews"));
@@ -186,26 +201,67 @@ public class FXMLController implements Initializable {
     
     @FXML
     private void ajouterforum(ActionEvent event) {
+        if (txftitre.getText().isEmpty() || txfcontenu.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "please fill all the textfields ");
+            } else {
         
-       
+       TrayNotification tray = null;
         Forum f = new Forum(CurseFilterService.cleanText(txftitre.getText()), CurseFilterService.cleanText(txfcontenu.getText()), txftheme.getValue());
         ForumCRUD s = new ForumCRUD();
 
         s.addPerson2(f);
-        JOptionPane.showMessageDialog(null, "Ajouter avec sucess");
+       // JOptionPane.showMessageDialog(null, "Ajouter avec sucess");
         
+          tray = new TrayNotification("Forum", "Forum ajouté avec succces ", NotificationType.SUCCESS);
+        tray.showAndDismiss(Duration.seconds(6));
         
          ls = s.read();
+         
+         ls.forEach((forum) -> {
+         
+         int count = new CommenterCRUD().countCommentersByForumId(forum.getId());
+            int sum = new CommenterCRUD().ratingSum(forum.getId());
+            int moy = 0;
+            if (count != 0) {
+                moy = sum / count;
+            }
+            
+            switch (moy) {
+                case 0: case 1:
+                    forum.setRatingImage("StarVide.png");
+                break;
+                
+                case 2: case 3: case 4:
+                    forum.setRatingImage("demiStar.png");
+                break;
+                
+                default:
+                    forum.setRatingImage("Star.png");
+                break;
+
+                                    }
+        });
+         
+         
+         
+         
+         
+         
         col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
             col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
             col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
-            col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+            // col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+            PrettyTime p = new PrettyTime();
+            col_date.setCellValueFactory(cellData -> new SimpleObjectProperty<>(p.format(Date.valueOf(cellData.getValue().getDate().toLocalDate()))));
+
+             ratingForum.setCellValueFactory(new PropertyValueFactory<>("ratingImg"));
             tableforum.setItems(ls);
 
-    }
+    }}
     
     @FXML
     private void displaySelected(javafx.scene.input.MouseEvent event) {
+         TrayNotification tray = null;
         if (event.getClickCount() == 2) {
            
         Forum i = tableforum.getSelectionModel().getSelectedItem();
@@ -219,8 +275,36 @@ public class FXMLController implements Initializable {
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == ButtonType.OK){
                                 si.Supprimer(i);
-                                JOptionPane.showMessageDialog(null, "Suppression avec sucess");
+                                //JOptionPane.showMessageDialog(null, "Suppression avec sucess");
                                 ls = si.read();
+                                 ls.forEach((forum) -> {
+         
+         int count = new CommenterCRUD().countCommentersByForumId(forum.getId());
+            int sum = new CommenterCRUD().ratingSum(forum.getId());
+            int moy = 0;
+            if (count != 0) {
+                moy = sum / count;
+            }
+            
+            switch (moy) {
+                case 0: case 1:
+                    forum.setRatingImage("StarVide.png");
+                break;
+                
+                case 2: case 3: case 4:
+                    forum.setRatingImage("demiStar.png");
+                break;
+                
+                default:
+                    forum.setRatingImage("Star.png");
+                break;
+
+                                    }
+        });
+         
+                                tray = new TrayNotification("Forum", "Forum supprimer avec succces ", NotificationType.SUCCESS);
+        tray.showAndDismiss(Duration.seconds(6));
+        
             col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
             col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
             col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
@@ -249,14 +333,44 @@ public class FXMLController implements Initializable {
     @FXML
     private void modifierforum(ActionEvent event) throws SQLException {
         Forum c = (Forum) tableforum.getSelectionModel().getSelectedItem();
+        TrayNotification tray = null;
 
         ForumCRUD fo = new ForumCRUD();
-        Forum h = new Forum(c.getId(), txftitre.getText(), txfcontenu.getText(), txftheme.getValue());
+        Forum h = new Forum(c.getId(), CurseFilterService.cleanText(txftitre.getText()),CurseFilterService.cleanText(txfcontenu.getText()), txftheme.getValue());
         System.out.println(h.getId());
         System.out.println(txftitre.getText());
         fo.Modifier(h);
-
+ tray = new TrayNotification("Forum", "Forum modifié avec succces ", NotificationType.SUCCESS);
+        tray.showAndDismiss(Duration.seconds(6));
         ls = fo.read();
+        
+        ls.forEach((forum) -> {
+         
+         int count = new CommenterCRUD().countCommentersByForumId(forum.getId());
+            int sum = new CommenterCRUD().ratingSum(forum.getId());
+            int moy = 0;
+            if (count != 0) {
+                moy = sum / count;
+            }
+            
+            switch (moy) {
+                case 0: case 1:
+                    forum.setRatingImage("StarVide.png");
+                break;
+                
+                case 2: case 3: case 4:
+                    forum.setRatingImage("demiStar.png");
+                break;
+                
+                default:
+                    forum.setRatingImage("Star.png");
+                break;
+
+                  }
+        });
+        
+        
+        
         // col_idF.setCellValueFactory(new PropertyValueFactory<>("idF"));
         col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
         col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
@@ -270,18 +384,71 @@ public class FXMLController implements Initializable {
         ForumCRUD fo = new ForumCRUD();
         if (filtre.getValue() != "") {
             ls = fo.filtrer((String) filtre.getValue());
-            col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
-            col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
-            col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
-            tableforum.setItems(ls);
+             ls.forEach((forum) -> {
+         
+         int count = new CommenterCRUD().countCommentersByForumId(forum.getId());
+            int sum = new CommenterCRUD().ratingSum(forum.getId());
+            int moy = 0;
+            if (count != 0) {
+                moy = sum / count;
+            }
+            
+            
+            switch (moy) {
+                case 0: case 1:
+                    forum.setRatingImage("StarVide.png");
+                break;
+                
+                case 2: case 3: case 4:
+                    forum.setRatingImage("demiStar.png");
+                break;
+                
+                default:
+                    forum.setRatingImage("Star.png");
+                break;
+
+                                    }
+        });
+         
+      
         } else {
             ls = fo.read();
-            col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
-            col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
-            col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
-            tableforum.setItems(ls);
+             ls.forEach((forum) -> {
+         
+         int count = new CommenterCRUD().countCommentersByForumId(forum.getId());
+            int sum = new CommenterCRUD().ratingSum(forum.getId());
+            int moy = 0;
+            if (count != 0) {
+                moy = sum / count;
+            }
+            
+            
+            
+            switch (moy) {
+                case 0: case 1:
+                    forum.setRatingImage("StarVide.png");
+                break;
+                
+                case 2: case 3: case 4:
+                    forum.setRatingImage("demiStar.png");
+                break;
+                
+                default:
+                    forum.setRatingImage("Star.png");
+                break;
+
+                                    }
+        });
+         
+     
 
         }
+        col_titre.setCellValueFactory(new PropertyValueFactory<>("sujet"));
+            col_contenu.setCellValueFactory(new PropertyValueFactory<>("probleme"));
+            col_theme.setCellValueFactory(new PropertyValueFactory<>("theme"));
+            ratingForum.setCellValueFactory(new PropertyValueFactory<>("ratingImg"));
+                    tableforum.setItems(ls);
+
     }
    
     
@@ -305,7 +472,7 @@ public class FXMLController implements Initializable {
         return col_contenu;
     }
 
-    public TableColumn<Forum, LocalDateTime> getCol_date() {
+    public TableColumn<Forum, String> getCol_date() {
         return col_date;
     }
 

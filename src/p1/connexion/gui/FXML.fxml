@@ -48,9 +48,9 @@
       <Button id="template_button" fx:id="btnajouter" layoutX="359.0" layoutY="545.0" mnemonicParsing="false" onAction="#ajouterforum" text="Ajouter" />
       <Button id="template_button" fx:id="btnmodifier" layoutX="428.0" layoutY="545.0" mnemonicParsing="false" onAction="#modifierforum" text="Modifier" />
       <ComboBox fx:id="filtre" layoutX="790.0" layoutY="257.0" onAction="#filtrer" prefWidth="150.0" />
-      <Button id="template_button" fx:id="stat" layoutX="601.0" layoutY="697.0" mnemonicParsing="false" onAction="#afficherStat" text="Statistique" />
       <Button id="template_button" fx:id="btntrier" layoutX="963.0" layoutY="257.0" mnemonicParsing="false" onAction="#Trier" text="trier" />
       <TextField id="template_textfield" fx:id="btnrecherche" layoutX="617.0" layoutY="257.0" onKeyReleased="#recherche" />
       <Label layoutX="275.0" layoutY="27.0" prefHeight="201.0" prefWidth="963.0" styleClass="test1" stylesheets="@../../../style.css" />
+      <Button fx:id="stat" layoutX="1385.0" layoutY="711.0" mnemonicParsing="false" onAction="#afficherStat" text="Stat" />
    </children>
 </AnchorPane>

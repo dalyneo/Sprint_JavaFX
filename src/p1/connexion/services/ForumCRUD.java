@@ -31,14 +31,15 @@ public class ForumCRUD {
     
     
     public void addPerson2(Forum t) {
+        
         String requete = "INSERT INTO forum(sujet,probleme,theme,date)"
                 + "VALUES (?,?,?,?)";
         try {
             PreparedStatement pst
                     = MyConnection.getInstance().getCnx().prepareStatement(requete);
-           pst.setString(1, t.getSujet());
+            pst.setString(1, t.getSujet());
             pst.setString(2, t.getProbleme());
-             pst.setDate(4, Date.valueOf(t.getDate().toLocalDate()));
+            pst.setDate(4, Date.valueOf(t.getDate().toLocalDate()));
             pst.setString(3, t.getTheme());
             pst.executeUpdate();
             System.out.println("Sujet de discussion ajouté !");
@@ -124,15 +125,21 @@ public class ForumCRUD {
         ResultSet rs = pt.executeQuery(req);
 
         while (rs.next()) {
-
+            
+            
             int id = rs.getInt("id");
            
             String sujet = rs.getString("sujet");
             String probleme = rs.getString("probleme");
-           // String date = rs.getString("date");
+           LocalDateTime date = Instant.ofEpochMilli(rs.getDate("date").getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+               
             String theme = rs.getString("theme");
+            String aa = rs.getString("users_ids_views");
 
             Forum C = new Forum( sujet, probleme, theme);
+            C.setViews(aa);
+             C.setDate(date);
+             C.setId(id);
 
             le.add(C);
         }
@@ -267,7 +274,7 @@ public class ForumCRUD {
 
        String requete = "UPDATE forum set users_ids_views=? WHERE id=?";
        try {
-           System.out.println("a777");
+           
            PreparedStatement pst
                    = MyConnection.getInstance().getCnx().prepareStatement(requete);
            // pst.setInt(5, t.getIdU());
@@ -276,7 +283,7 @@ public class ForumCRUD {
 
            // pst.executeUpdate();
 
-           System.out.println("Sujet de discussion modifier !");
+           System.out.println("nbre de vue !");
            pst.executeUpdate();
            return 1;
        } catch (SQLException ex) {

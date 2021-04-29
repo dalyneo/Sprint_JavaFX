@@ -6,10 +6,11 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane id="background" prefHeight="800.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="p1.connexion.gui.ForumBackFXMLController">
    <children>
-      <TableView id="table_template" fx:id="tableforum_back" layoutX="372.0" layoutY="176.0" onMouseClicked="#displaySelectedBack" prefHeight="390.0" prefWidth="675.0">
+      <TableView id="table_template" fx:id="tableforum_back" layoutX="339.0" layoutY="294.0" onMouseClicked="#displaySelectedBack" prefHeight="334.0" prefWidth="775.0">
          <columns>
             <TableColumn fx:id="col_theme" prefWidth="115.0" text="Theme" />
             <TableColumn fx:id="col_titre" prefWidth="79.0" text="Sujet" />
@@ -19,13 +20,29 @@
             <TableColumn fx:id="Editcol" prefWidth="268.0" />
          </columns>
       </TableView>
-      <Button id="menu" layoutY="183.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Cours" />
-      <Button id="menu" layoutY="263.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Idee" />
-      <Button id="menu" layoutY="341.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Evenement" />
-      <Button id="menu" layoutY="420.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Forum" />
-      <Button id="menu" layoutY="500.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Stage" />
-      <Label layoutY="577.0" prefHeight="187.0" prefWidth="243.0" styleClass="test" stylesheets="@../../../template.css" />
-      <ComboBox fx:id="filtre" layoutX="710.0" layoutY="96.0" onAction="#filtrer2" prefWidth="150.0" />
-      <Button fx:id="retour_back" layoutX="981.0" layoutY="565.0" mnemonicParsing="false" onAction="#retourBack" text="Quitter" />
+      <ComboBox fx:id="filtre" layoutX="734.0" layoutY="250.0" onAction="#filtrer2" prefWidth="150.0" />
+      <Button fx:id="retour_back" layoutX="792.0" layoutY="669.0" mnemonicParsing="false" onAction="#retourBack" text="Quitter" />
+      <Button id="template_button" fx:id="stat" layoutX="371.0" layoutY="647.0" mnemonicParsing="false" onAction="#afficherStat2" prefHeight="43.0" prefWidth="87.0" text="Statistique" />
+      <AnchorPane layoutX="2.0" prefHeight="810.0" prefWidth="283.0" style="-fx-background-color: #D3D3D3;">
+         <children>
+            <AnchorPane prefHeight="153.0" prefWidth="283.0" style="-fx-background-color: #A9A9A9;">
+               <children>
+                  <Label layoutX="33.0" layoutY="37.0" prefHeight="79.0" prefWidth="221.0" text="Dashboard" textFill="#126f80">
+                     <font>
+                        <Font name="System Italic" size="31.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <Label layoutX="8.0" layoutY="588.0" prefHeight="133.0" prefWidth="267.0" styleClass="test" stylesheets="@../../../style.css" />
+            <Button id="menu" layoutX="14.0" layoutY="166.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Authentification" />
+            <Button id="menu" layoutX="14.0" layoutY="236.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Freelancer" />
+            <Button id="menu" layoutX="14.0" layoutY="304.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Offre" />
+            <Button id="menu" fx:id="forum_admin" layoutX="14.0" layoutY="371.0" mnemonicParsing="false" onAction="#forum_admin" prefHeight="59.0" prefWidth="251.0" text="Forum Admin" />
+            <Button id="menu" layoutX="14.0" layoutY="439.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Certificat" />
+            <Button id="menu" layoutX="14.0" layoutY="507.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="251.0" text="Evenement" />
+         </children>
+      </AnchorPane>
+      <Label layoutX="285.0" layoutY="-1.0" prefHeight="239.0" prefWidth="963.0" styleClass="testdash" stylesheets="@../../../style.css" />
    </children>
 </AnchorPane>

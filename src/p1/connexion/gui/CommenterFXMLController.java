@@ -34,6 +34,8 @@ import p1.connexion.entities.Forum;
 import p1.connexion.services.CommenterCRUD;
 import p1.connexion.services.CurseFilterService;
 import p1.connexion.services.ForumCRUD;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 /**
  * FXML Controller class
@@ -78,6 +80,10 @@ public class CommenterFXMLController implements Initializable {
                 
                 
                 CommenterCRUD c = new CommenterCRUD();
+                new animatefx.animation.ZoomInUp(retourbtn).play();
+                new animatefx.animation.ZoomInUp(btnmodifier).play();
+                new animatefx.animation.ZoomInUp(btnajouter).play();
+                
                      try {
 
             ObservableList<Commentaire> ls = c.read();
@@ -113,7 +119,10 @@ public void showinformation(String b) throws SQLException {
 
     @FXML
     private void ajoutercommentaire(ActionEvent event) throws SQLException {
-      
+         if (txfdes.getText().isEmpty() || raiting.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "please fill all the textfields ");
+            } else {
+       TrayNotification tray = null;
         // commentaire f = new commentaire(Integer.parseInt(txfidcom.getText()),Integer.parseInt(txfidf.getText()),Integer.parseInt(txfidu.getText()), txfdes.getText());
             // Commentaire r = new Commentaire(CurseFilterService.cleanText(txfdes.getText()));
         Commentaire f = new Commentaire( CurseFilterService.cleanText(txfdes.getText()));
@@ -122,20 +131,21 @@ public void showinformation(String b) throws SQLException {
      
         CommenterCRUD s = new CommenterCRUD();
         s.Ajouter(f);
-        JOptionPane.showMessageDialog(null, "Ajouter avec sucess");
+        //JOptionPane.showMessageDialog(null, "Ajouter avec sucess");
 
         
 
         ObservableList<Commentaire> ls = s.read3(labe1.getText());
-
-        
+ 
+        tray = new TrayNotification("Commentaire", "Commentaire ajouter avec succces ", NotificationType.SUCCESS);
+        tray.showAndDismiss(Duration.seconds(6));
         col_des_com.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
         tablecom.setItems(ls);
 
-    }
+    }}
     @FXML
     private void modifiercommentaire(ActionEvent event) throws SQLException {
-        
+         TrayNotification tray = null;
         Commentaire c = (Commentaire) tablecom.getSelectionModel().getSelectedItem();
 
         CommenterCRUD fo = new CommenterCRUD();
@@ -147,12 +157,15 @@ public void showinformation(String b) throws SQLException {
 
         ObservableList<Commentaire> ls = fo.read3(labe1.getText());
       
+        tray = new TrayNotification("Commentaire", "Commentaire modifier avec succces ", NotificationType.SUCCESS);
+        tray.showAndDismiss(Duration.seconds(6));
         col_des_com.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
         tablecom.setItems(ls);
     }
 
     @FXML
     private void displaySelected2(javafx.scene.input.MouseEvent event) {
+        TrayNotification tray = null;
         if (event.getClickCount() == 2) {
             Commentaire i = tablecom.getSelectionModel().getSelectedItem();
             CommenterCRUD si = new CommenterCRUD();
@@ -165,11 +178,12 @@ public void showinformation(String b) throws SQLException {
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == ButtonType.OK){
                                 si.Supprimer(i);
-                                JOptionPane.showMessageDialog(null, "Suppression avec sucess");
+                                //JOptionPane.showMessageDialog(null, "Suppression avec sucess");
                                 try {
                 ObservableList<Commentaire> ls = si.read3(labe1.getText());
 
-                
+                tray = new TrayNotification("Commentaire", "Commentaire supprimer avec succces ", NotificationType.SUCCESS);
+        tray.showAndDismiss(Duration.seconds(6));
                 col_des_com.setCellValueFactory(new PropertyValueFactory<>("commentaire"));
                 tablecom.setItems(ls);
             } catch (SQLException ex) {
