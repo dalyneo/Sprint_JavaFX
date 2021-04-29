@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="sprint_java2.jnlp">
+  <information>
+    <title>sprint_java2</title>
+    <vendor>Wael Belhadj</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="lib\fontawesomefx-8.2.jar" size="180341" download="eager" />
+    <jar href="lib\javax.mail.jar" size="659033" download="eager" />
+    <jar href="lib\jfoenix-8.0.4.jar" size="2487326" download="eager" />
+    <jar href="lib\jfoenix-9.0.4.jar" size="2201031" download="eager" />
+    <jar href="lib\mysql-connector-java-5.1.15.jar" size="785998" download="eager" />
+    <jar href="sprint_java2.jar" size="430489" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="800" height="600" main-class="sprint_java2.Sprint_java2"  name="sprint_java2" />
+  <update check="always"/>
+</jnlp>
