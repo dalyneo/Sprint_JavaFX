@@ -1,0 +1,2 @@
+startPoint:
+scene.getStylesheets().add("style.css");
